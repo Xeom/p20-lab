@@ -24,6 +24,21 @@ QPoint Pos::point(QSize size)
     return QPoint(x * size.width(), y * size.height());
 }
 
+Pos Pos::operator+(const Pos &other)
+{
+    return Pos(x + other.x, y + other.y);
+}
+
+Pos Pos::operator-(const Pos &other)
+{
+    return Pos(x - other.x, y - other.y);
+}
+
+Pos Pos::operator*(const double &s)
+{
+    return Pos(x * s, y * s);
+}
+
 bool Pos::is_near(Pos p, double dist)
 {
     double dx, dy, r;
@@ -34,3 +49,14 @@ bool Pos::is_near(Pos p, double dist)
     return r < dist;
 }
 
+void Pos::deserialize(stringstream &stream)
+{
+    stream >> x >> y;
+}
+
+string Pos::serialize(void)
+{
+    stringstream stream;
+    stream << x << ' ' << y;
+    return stream.str();
+}

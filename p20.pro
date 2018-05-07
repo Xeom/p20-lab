@@ -5,8 +5,12 @@
 TEMPLATE = app
 TARGET = p20
 INCLUDEPATH += .
+LIBS +=
+DEFINES += NO_UART
 
 # Input
-HEADERS += line.h pos.h window.h board.h colourpicker.h serial.h
-SOURCES += line.cpp pos.cpp window.cpp main.cpp board.cpp colourpicker.cpp serial.cpp
+HEADERS += line.h pos.h window.h board.h colourpicker.h serial.h \
+    sizepicker.h output.h b64.h
+SOURCES += line.cpp pos.cpp window.cpp main.cpp board.cpp colourpicker.cpp serial.cpp \
+    sizepicker.cpp output.cpp b64.cpp
 QT += core gui widgets

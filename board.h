@@ -30,7 +30,6 @@ protected:
 
     void mouse_line(Pos fin);
     void mouse_del(Pos p);
-    void clear(void);
 
 public:
     pthread_mutex_t lock;
@@ -39,6 +38,8 @@ public:
 
     void new_line(Line &line, int id);
     void del_line(int id);
+    void clear(void);
+    void sync(void);
     void draw_all(void);
     void draw_line(int id);
 };

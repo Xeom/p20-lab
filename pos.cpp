@@ -1,5 +1,9 @@
 #include "pos.h"
+#include "b64.h"
 #include <cmath>
+#include <stdint.h>
+#include <cstring>
+#include <iostream>
 
 Pos::Pos()
 {
@@ -49,14 +53,38 @@ bool Pos::is_near(Pos p, double dist)
     return r < dist;
 }
 
-void Pos::deserialize(stringstream &stream)
+void Pos::deserialize(vector<char> &data)
 {
-    stream >> x >> y;
+    uint16_t xint, yint;
+
+    memcpy(&xint, &(*data.end()) - 2, 2);
+    data.pop_back();
+    data.pop_back();
+    memcpy(&yint, &(*data.end()) - 2, 2);
+    data.pop_back();
+    data.pop_back();
+
+    x = (float)xint / 0xffff;
+    y = (float)yint / 0xffff;
 }
 
-string Pos::serialize(void)
+void Pos::serialize(vector<char> &data)
 {
     stringstream stream;
-    stream << x << ' ' << y;
-    return stream.str();
+    uint16_t xint,  yint;
+    char     xchr[2], ychr[2];
+    
+    if      (x >= 1) xint = 0xffff;
+    else if (x <= 0) xint = 0;
+    else             xint = 0xffff * x;
+
+    if      (y >= 1) yint = 0xffff;
+    else if (y <= 0) yint = 0;
+    else             yint = 0xffff * y;
+
+    memcpy(xchr, &xint, 2);
+    memcpy(ychr, &yint, 2);
+
+    data.insert(data.end(), ychr, ychr + 2);
+    data.insert(data.end(), xchr, xchr + 2);
 }

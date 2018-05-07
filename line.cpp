@@ -1,4 +1,5 @@
 #include <QColor>
+#include <iostream>
 
 #include <cmath>
 
@@ -8,11 +9,12 @@ Line::Line()
 {
 }
 
-Line::Line(const Pos &apos, const Pos &bpos, QColor qcol)
+Line::Line(const Pos &apos, const Pos &bpos, QColor qcol, int w)
 {
     col = qcol;
     a   = apos;
     b   = bpos;
+    width = w;
 }
 
 bool Line::is_near(const Pos &p, float dist)
@@ -52,7 +54,7 @@ bool Line::is_near(const Pos &p, float dist)
 
 void Line::draw(QPainter &painter, QSize size)
 {
-    QPen pen(col, 3);
+    QPen pen(col, width);
     painter.setPen(pen);
     painter.drawLine(a.point(size), b.point(size));
 }
@@ -115,26 +117,40 @@ void Line::trim(void)
         *l = *r + (*l - *r) * ((r->x) / (r->x - l->x));
 }
 
-void Line::deserialize(stringstream &stream)
+void Line::deserialize(vector<char> &data)
 {
-    int rval, gval, bval;
+    unsigned char rval, gval, bval;
 
-    a.deserialize(stream);
-    b.deserialize(stream);
-    stream >> rval >> gval >> bval;
-
+   
+    rval = *(data.end() - 1);
+    data.pop_back();
+    gval = *(data.end() - 1);
+    data.pop_back();
+    bval = *(data.end() - 1);
+    data.pop_back();
+    width = *(data.end() - 1);
+    data.pop_back();
+    
+    a.deserialize(data);
+    b.deserialize(data);
+   
     col = QColor(rval, gval, bval);
 }
 
-string Line::serialize(void)
+void Line::serialize(vector<char> &data)
 {
-    int rval, gval, bval;    
+    unsigned char rval, gval, bval;    
 
+    b.serialize(data);
+    a.serialize(data);
+    
     rval = col.red();
     gval = col.green();
     bval = col.blue();
-    
-    std::stringstream col;
-    col << rval << ' ' << gval << ' ' << bval;
-    return a.serialize() + " " + b.serialize() + " " + col.str();
+
+    data.push_back((unsigned char)width);
+    data.push_back(bval);
+    data.push_back(gval);
+    data.push_back(rval);
+
 }

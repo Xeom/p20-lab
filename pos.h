@@ -3,6 +3,7 @@
 # include <QPoint>
 # include <QSize>
 # include <sstream>
+# include <vector>
 
 using namespace std;
 
@@ -22,8 +23,8 @@ public:
     QPoint point(QSize size);
     bool is_near(Pos p, double dist);
 
-    void deserialize(stringstream &stream);
-    string serialize(void);
+    void deserialize(vector<char> &data);
+    void serialize(vector<char> &data);
 };
 
 #endif

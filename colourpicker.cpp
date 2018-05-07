@@ -9,9 +9,11 @@ static QColor colours[] =
 {
     Qt::black,
     Qt::red,
+    QColor(255, 128, 0),
     Qt::yellow,
     Qt::green,
     Qt::blue,
+    QColor(128, 0, 255),
     Qt::magenta
 };
 
